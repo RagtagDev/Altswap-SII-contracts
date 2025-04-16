@@ -7,4 +7,8 @@ import {PoolConfig} from "./models/PoolConfig.sol";
 
 contract Exchange is IExchange {
     mapping(PoolId => PoolConfig) public configs;
+
+    function unlock(bytes calldata data) external returns (bytes memory result) {
+        // TODO:
+    }
 }
