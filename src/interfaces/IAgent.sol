@@ -5,18 +5,18 @@ import {TokenBundle} from "../models/TokenBundle.sol";
 
 interface IAgent {
     function initiate(
-        TokenBundle calldata retainBundle,
+        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata releaseBundle
+        TokenBundle calldata creditBundle
     ) external returns (bytes32 messageId);
 
-    function release(address recipient, TokenBundle calldata releaseBundle) external;
+    function release(address recipient, TokenBundle calldata creditBundle) external;
 
     function conclude(bytes32 messageId) external;
-    function conclude(bytes32 messageId, address recipient, TokenBundle calldata releaseBundle) external;
+    function conclude(bytes32 messageId, address recipient, TokenBundle calldata creditBundle) external;
 
     function rollback(bytes32 messageId) external;
 }

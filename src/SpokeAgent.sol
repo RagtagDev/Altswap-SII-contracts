@@ -10,7 +10,7 @@ import {TokenBundle} from "./models/TokenBundle.sol";
 contract SpokeAgent is IAgent {
     struct MessageCache {
         address sender;
-        TokenBundle retainBundle;
+        TokenBundle debitBundle;
     }
 
     // TODO: set
@@ -23,40 +23,40 @@ contract SpokeAgent is IAgent {
     mapping(bytes32 => MessageCache) internal messageCaches;
 
     function initiate(
-        TokenBundle calldata retainBundle,
+        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata releaseBundle
+        TokenBundle calldata creditBundle
     ) external returns (bytes32 messageId) {
         // TODO:
-        // 1. retainBundle.transfer(msg.sender, address(this))
-        // 2. generate messageId, then cache msg.sender and retainBundle
-        // 3. call broker.handleMessage on hubChainId through messenger with messageId, retainBundle, executor, executionData, recipient, recipientChainId, and releaseBundle
+        // 1. debitBundle.transfer(msg.sender, address(this))
+        // 2. generate messageId, then cache msg.sender and debitBundle
+        // 3. call broker.handleMessage on hubChainId through messenger with messageId, debitBundle, executor, executionData, recipient, recipientChainId, and creditBundle
     }
 
-    function release(address recipient, TokenBundle calldata releaseBundle) external {
+    function release(address recipient, TokenBundle calldata creditBundle) external {
         // TODO: only from broker through messenger
-        // TODO: releaseBundle.transfer(address(this), recipient)
+        // TODO: creditBundle.transfer(address(this), recipient)
     }
 
     function conclude(bytes32 messageId) external {
         // TODO: only from broker through messenger
         // TODO: delete messageCaches[messageId]
     }
-    function conclude(bytes32 messageId, address recipient, TokenBundle calldata releaseBundle) external {
+    function conclude(bytes32 messageId, address recipient, TokenBundle calldata creditBundle) external {
         // TODO: only from broker through messenger
         // TODO:
-        // 1. releaseBundle.transfer(address(this), recipient)
+        // 1. creditBundle.transfer(address(this), recipient)
         // 2. delete messageCaches[messageId]
     }
 
     function rollback(bytes32 messageId) external {
         // TODO: only from broker through messenger
         // TODO:
-        // 1. get sender and retainBundle from messageCaches[messageId]
-        // 2. retainBundle.transfer(address(this), sender)
+        // 1. get sender and debitBundle from messageCaches[messageId]
+        // 2. debitBundle.transfer(address(this), sender)
         // 3. delete messageCaches[messageId]
     }
 }

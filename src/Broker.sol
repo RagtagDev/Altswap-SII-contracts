@@ -19,19 +19,19 @@ contract Broker is IBroker, IUnlockCallback {
 
     function handleMessage(
         bytes32 messageId,
-        TokenBundle calldata retainBundle,
+        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata releaseBundle
+        TokenBundle calldata creditBundle
     ) external {
         // TODO: only from agent through messenger
-        // TODO: debit retainBundle for messenger.crossDomainMessageSender into 6909 vault
+        // TODO: debit debitBundle for messenger.crossDomainMessageSender into 6909 vault
         try exchange.unlock(abi.encode(executor, executionData)) {
             // TODO:
-            // if recipientChainId == messenger.crossDomainMessageSource, call agent.conclude with messageId, recipient, releaseBundle
-            // else call agent.release on recipientChainId with recipient, releaseBundle; and agent.conclude on messenger.crossDomainMessageSource with messageId
+            // if recipientChainId == messenger.crossDomainMessageSource, call agent.conclude with messageId, recipient, creditBundle
+            // else call agent.release on recipientChainId with recipient, creditBundle; and agent.conclude on messenger.crossDomainMessageSource with messageId
         } catch {
             // TODO:
             // call agent.rollback on messenger.crossDomainMessageSource with messageId

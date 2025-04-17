@@ -6,11 +6,11 @@ import {TokenBundle} from "../models/TokenBundle.sol";
 interface IBroker {
     function handleMessage(
         bytes32 messageId,
-        TokenBundle calldata retainBundle,
+        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata releaseBundle
+        TokenBundle calldata creditBundle
     ) external;
 }
