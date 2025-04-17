@@ -7,7 +7,7 @@ import {IAgent} from "./interfaces/IAgent.sol";
 import {IBroker} from "./interfaces/IBroker.sol";
 import {TokenBundle} from "./models/TokenBundle.sol";
 
-contract SpokeAgent is IAgent {
+contract Agent is IAgent {
     struct MessageCache {
         address sender;
         TokenBundle debitBundle;
@@ -44,12 +44,6 @@ contract SpokeAgent is IAgent {
     function conclude(bytes32 messageId) external {
         // TODO: only from broker through messenger
         // TODO: delete messageCaches[messageId]
-    }
-    function conclude(bytes32 messageId, address recipient, TokenBundle calldata creditBundle) external {
-        // TODO: only from broker through messenger
-        // TODO:
-        // 1. creditBundle.transfer(address(this), recipient)
-        // 2. delete messageCaches[messageId]
     }
 
     function rollback(bytes32 messageId) external {

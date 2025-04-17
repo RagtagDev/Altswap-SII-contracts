@@ -16,7 +16,6 @@ interface IAgent {
     function release(address recipient, TokenBundle calldata creditBundle) external;
 
     function conclude(bytes32 messageId) external;
-    function conclude(bytes32 messageId, address recipient, TokenBundle calldata creditBundle) external;
 
     function rollback(bytes32 messageId) external;
 }
