@@ -1,19 +1,19 @@
 // SPDX-License-Identifier: MIT
 pragma solidity ^0.8.0;
 
-import {TokenBundle} from "../models/TokenBundle.sol";
+import {TokenData} from "../models/TokenData.sol";
 
 interface IAgent {
     function initiate(
-        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata creditBundle
+        TokenData[] calldata debitBundle,
+        TokenData[] calldata creditBundle
     ) external returns (bytes32 messageId);
 
-    function release(address recipient, TokenBundle calldata creditBundle) external;
+    function release(address recipient, TokenData[] calldata creditBundle) external;
 
     function conclude(bytes32 messageId) external;
 

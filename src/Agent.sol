@@ -5,12 +5,12 @@ import {IL2ToL2CrossDomainMessenger} from "@optimism/bedrock/L2/IL2ToL2CrossDoma
 import {Predeploys} from "@optimism/bedrock/libraries/Predeploys.sol";
 import {IAgent} from "./interfaces/IAgent.sol";
 import {IBroker} from "./interfaces/IBroker.sol";
-import {TokenBundle} from "./models/TokenBundle.sol";
+import {TokenData} from "./models/TokenData.sol";
 
 contract Agent is IAgent {
     struct MessageCache {
         address sender;
-        TokenBundle debitBundle;
+        TokenData[] debitBundle;
     }
 
     // TODO: set
@@ -23,20 +23,21 @@ contract Agent is IAgent {
     mapping(bytes32 => MessageCache) internal messageCaches;
 
     function initiate(
-        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata creditBundle
+        TokenData[] calldata debitBundle,
+        TokenData[] calldata creditBundle
     ) external returns (bytes32 messageId) {
         // TODO:
         // 1. debitBundle.transfer(msg.sender, address(this))
+
         // 2. generate messageId, then cache msg.sender and debitBundle
         // 3. call broker.handleMessage on hubChainId through messenger with messageId, debitBundle, executor, executionData, recipient, recipientChainId, and creditBundle
     }
 
-    function release(address recipient, TokenBundle calldata creditBundle) external {
+    function release(address recipient, TokenData[] calldata creditBundle) external {
         // TODO: only from broker through messenger
         // TODO: creditBundle.transfer(address(this), recipient)
     }

@@ -7,7 +7,7 @@ import {IAgent} from "./interfaces/IAgent.sol";
 import {IBroker} from "./interfaces/IBroker.sol";
 import {IExchange} from "./interfaces/IExchange.sol";
 import {IUnlockCallback} from "./interfaces/IUnlockCallback.sol";
-import {TokenBundle} from "./models/TokenBundle.sol";
+import {TokenData} from "./models/TokenData.sol";
 
 contract Broker is IBroker, IUnlockCallback {
     // TODO: set
@@ -19,12 +19,12 @@ contract Broker is IBroker, IUnlockCallback {
 
     function handleMessage(
         bytes32 messageId,
-        TokenBundle calldata debitBundle,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
-        TokenBundle calldata creditBundle
+        TokenData[] calldata debitBundle,
+        TokenData[] calldata creditBundle
     ) external {
         // TODO: only from agent through messenger
         // TODO: debit debitBundle for messenger.crossDomainMessageSender into 6909 vault
