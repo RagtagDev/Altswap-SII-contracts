@@ -5,7 +5,7 @@ libs = ["dependencies"]
 solc_version = "0.8.29"
 via-ir = true
 remappings = [
-    "@forge-std/=dependencies/forge-std-1.9.6/src/",
+    "forge-std/=dependencies/forge-std-1.9.6/src/",
     "@optimism/bedrock/=dependencies/@eth-optimism-contracts-bedrock-0.17.3/src/"
 ]
 
