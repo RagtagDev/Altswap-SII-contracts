@@ -1,10 +1,10 @@
 // SPDX-License-Identifier: MIT
 pragma solidity =0.8.29;
 
-import {IL2ToL2CrossDomainMessenger} from "@optimism/bedrock/L2/IL2ToL2CrossDomainMessenger.sol";
-import {Predeploys} from "@optimism/bedrock/libraries/Predeploys.sol";
+import {IL2ToL2CrossDomainMessenger} from "./interfaces/external/IL2ToL2CrossDomainMessenger.sol";
 import {IAgent} from "./interfaces/IAgent.sol";
 import {IBroker} from "./interfaces/IBroker.sol";
+import {Predeploys} from "./libraries/external/Predeploys.sol";
 import {TokenData} from "./models/TokenData.sol";
 
 contract Agent is IAgent {
@@ -29,12 +29,11 @@ contract Agent is IAgent {
         address recipient,
         TokenData[] calldata debitBundle,
         TokenData[] calldata creditBundle
-    ) external returns (bytes32 messageId) {
+    ) external returns (bytes32 messageHash) {
         // TODO:
         // 1. debitBundle.transfer(msg.sender, address(this))
-
-        // 2. generate messageId, then cache msg.sender and debitBundle
-        // 3. call broker.handleMessage on hubChainId through messenger with messageId, debitBundle, executor, executionData, recipient, recipientChainId, and creditBundle
+        // 2. call broker.handleMessage on hubChainId through messenger and get messgeHash
+        // 3. cache msg.sender, and debitBundle under messageHash
     }
 
     function release(address recipient, TokenData[] calldata creditBundle) external {
@@ -42,16 +41,16 @@ contract Agent is IAgent {
         // TODO: creditBundle.transfer(address(this), recipient)
     }
 
-    function conclude(bytes32 messageId) external {
+    function conclude(bytes32 messageHash) external {
         // TODO: only from broker through messenger
-        // TODO: delete messageCaches[messageId]
+        // TODO: delete messageCaches[messageHash]
     }
 
-    function rollback(bytes32 messageId) external {
+    function rollback(bytes32 messageHash) external {
         // TODO: only from broker through messenger
         // TODO:
-        // 1. get sender and debitBundle from messageCaches[messageId]
+        // 1. get sender and debitBundle from messageCaches[messageHash]
         // 2. debitBundle.transfer(address(this), sender)
-        // 3. delete messageCaches[messageId]
+        // 3. delete messageCaches[messageHash]
     }
 }
