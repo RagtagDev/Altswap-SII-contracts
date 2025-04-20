@@ -29,7 +29,7 @@ contract Agent is IAgent {
         address recipient,
         TokenData[] calldata debitBundle,
         TokenData[] calldata creditBundle
-    ) external returns (bytes32 messageHash) {
+    ) external payable returns (bytes32 messageId) {
         // TODO:
         // 1. debitBundle.transfer(msg.sender, address(this))
         // 2. call broker.handleMessage on hubChainId through messenger and get messgeHash

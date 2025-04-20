@@ -11,7 +11,7 @@ interface IAgent {
         address recipient,
         TokenData[] calldata debitBundle,
         TokenData[] calldata creditBundle
-    ) external returns (bytes32 messageHash);
+    ) external payable returns (bytes32 messageId);
 
     function release(address recipient, TokenData[] calldata creditBundle) external;
 
