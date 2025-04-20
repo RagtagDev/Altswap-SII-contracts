@@ -5,12 +5,14 @@ import {TokenData} from "../models/TokenData.sol";
 
 interface IBroker {
     function handleMessage(
-        bytes32 messageId,
+        address user,
         address executor,
         bytes calldata executionData,
         uint256 recipientChainId,
         address recipient,
         TokenData[] calldata debitBundle,
-        TokenData[] calldata creditBundle
+        TokenData[] calldata creditBundle,
+        bytes calldata onSuccessCallback,
+        bytes calldata onFailureCallback
     ) external;
 }
