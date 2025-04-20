@@ -17,5 +17,5 @@ interface IAgent {
 
     function conclude(bytes32 messageHash) external;
 
-    function rollback(bytes32 messamessageHashgeId) external;
+    function rollback(bytes32 messageHash) external;
 }

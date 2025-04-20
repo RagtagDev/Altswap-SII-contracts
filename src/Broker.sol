@@ -39,9 +39,13 @@ contract Broker is IBroker, IUnlockCallback {
         try Broker(this).selfHandleMessage(
             sourceChainId, user, executor, executionData, recipientChainId, recipient, debitBundle, creditBundle
         ) {
-            messenger.sendMessage(sourceChainId, sourceSender, onSuccessCallback);
+            if (onSuccessCallback.length > 0) {
+                messenger.sendMessage(sourceChainId, sourceSender, onSuccessCallback);
+            }
         } catch {
-            messenger.sendMessage(sourceChainId, sourceSender, onFailureCallback);
+            if (onFailureCallback.length > 0) {
+                messenger.sendMessage(sourceChainId, sourceSender, onFailureCallback);
+            }
         }
     }
 
