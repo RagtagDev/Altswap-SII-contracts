@@ -39,13 +39,9 @@ contract Broker is IBroker, IUnlockCallback {
         try Broker(this).selfHandleMessage(
             sourceChainId, user, executor, executionData, recipientChainId, recipient, debitBundle, creditBundle
         ) {
-            if (onSuccessCallback.length > 0) {
-                messenger.sendMessage(sourceChainId, sourceSender, onSuccessCallback);
-            }
+            if (onSuccessCallback.length > 0) messenger.sendMessage(sourceChainId, sourceSender, onSuccessCallback);
         } catch {
-            if (onFailureCallback.length > 0) {
-                messenger.sendMessage(sourceChainId, sourceSender, onFailureCallback);
-            }
+            if (onFailureCallback.length > 0) messenger.sendMessage(sourceChainId, sourceSender, onFailureCallback);
         }
     }
 
@@ -72,7 +68,7 @@ contract Broker is IBroker, IUnlockCallback {
         }
 
         messenger.sendMessage(
-            recipientChainId, address(agent), abi.encodeWithSelector(IAgent.release.selector, recipient, creditBundle)
+            recipientChainId, address(agent), abi.encodeCall(IAgent.release, (recipient, creditBundle))
         );
     }
 
