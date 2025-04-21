@@ -9,12 +9,13 @@ import {TokenData, TokenDataLibrary} from "./models/TokenData.sol";
 
 contract Agent is IAgent {
     using TokenDataLibrary for TokenData[];
+
     struct MessageCache {
         address sender;
         TokenData[] debitBundle;
     }
 
-    uint256 public messageNonce;
+    uint256 public nonce;
     // TODO: set
     uint256 internal immutable hubChainId;
     // TODO: set
@@ -22,7 +23,7 @@ contract Agent is IAgent {
     IL2ToL2CrossDomainMessenger internal immutable messenger =
         IL2ToL2CrossDomainMessenger(Predeploys.L2_TO_L2_CROSS_DOMAIN_MESSENGER);
 
-    mapping(bytes32 => MessageCache) internal messageCaches;
+    mapping(uint256 => MessageCache) internal messageCaches;
 
     function initiate(
         address executor,
@@ -31,40 +32,38 @@ contract Agent is IAgent {
         address recipient,
         TokenData[] calldata debitBundle,
         TokenData[] calldata creditBundle
-    ) external payable returns (bytes32 messageId) {
+    ) external payable returns (uint256 cacheNonce) {
         // 1. debitBundle.transfer(msg.sender, address(this))
         debitBundle.transferIn(msg.sender);
         // 2. call broker.handleMessage on hubChainId through messenger and get messgeHash
-        assembly ("memory-safe") {
-            let m := sload(messageNonce.slot)
-            mstore(0x00, m)
-            mstore(0x20, chainid())
+        cacheNonce = nonce;
+        bytes memory onSuccessCallback = abi.encodeCall(IAgent.conclude, (cacheNonce));
+        bytes memory onFailureCallback = abi.encodeCall(IAgent.rollback, (cacheNonce));
 
-            messageId := keccak256(0x00, 0x40)
-
-            sstore(messageNonce.slot, add(m, 1))
-        }
-
-        messageCaches[messageId] = MessageCache({
-            sender: msg.sender,
-            debitBundle: debitBundle
-        });
-
-        // 3. cache msg.sender, and debitBundle under messageHash
         bytes memory message;
 
-        assembly ("memory-safe") {
-            let ptr := mload(0x40)
-            let copylen := add(sub(calldatasize(), 4), 0x20)
-            message := ptr
-
-            mstore(ptr, copylen)
-            mstore(add(ptr, 0x20), messageId)
-            calldatacopy(add(ptr, 0x40), 0x04, copylen)
-            mstore(0x40, add(ptr, copylen))
-        }
+        // TODO: Use Assembly Optimization
+        message = abi.encodeCall(
+            IBroker.handleMessage,
+            (
+                msg.sender,
+                executor,
+                executionData,
+                recipientChainId,
+                recipient,
+                debitBundle,
+                creditBundle,
+                onSuccessCallback,
+                onFailureCallback
+            )
+        );
 
         messenger.sendMessage(hubChainId, address(broker), message);
+
+        // 3. cache msg.sender, and debitBundle under messageHash
+        messageCaches[nonce] = MessageCache({sender: msg.sender, debitBundle: debitBundle});
+
+        nonce += 1;
     }
 
     function release(address recipient, TokenData[] calldata creditBundle) external {
@@ -72,12 +71,12 @@ contract Agent is IAgent {
         // TODO: creditBundle.transfer(address(this), recipient)
     }
 
-    function conclude(bytes32 messageHash) external {
+    function conclude(uint256 messageNonce) external {
         // TODO: only from broker through messenger
         // TODO: delete messageCaches[messageHash]
     }
 
-    function rollback(bytes32 messageHash) external {
+    function rollback(uint256 messageNonce) external {
         // TODO: only from broker through messenger
         // TODO:
         // 1. get sender and debitBundle from messageCaches[messageHash]
