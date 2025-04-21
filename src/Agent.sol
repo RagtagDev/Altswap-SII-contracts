@@ -6,6 +6,7 @@ import {IAgent} from "./interfaces/IAgent.sol";
 import {IBroker} from "./interfaces/IBroker.sol";
 import {Predeploys} from "./libraries/external/Predeploys.sol";
 import {TokenData, TokenDataLibrary} from "./models/TokenData.sol";
+import {Errors} from "./libraries/Errors.sol";
 
 contract Agent is IAgent {
     using TokenDataLibrary for TokenData[];
@@ -66,21 +67,32 @@ contract Agent is IAgent {
         nonce += 1;
     }
 
-    function release(address recipient, TokenData[] calldata creditBundle) external {
-        // TODO: only from broker through messenger
-        // TODO: creditBundle.transfer(address(this), recipient)
+    modifier onlyBroker() {
+        // only from broker through messenger
+        (address sourceSender, uint256 sourceChainId) = messenger.crossDomainMessageContext();
+
+        require(msg.sender == address(messenger), Errors.NotMessenger());
+        require(sourceSender == address(broker), Errors.NotBroker());
+        require(hubChainId == sourceChainId, Errors.NotHubChain());
+
+        _;
     }
 
-    function conclude(uint256 messageNonce) external {
-        // TODO: only from broker through messenger
-        // TODO: delete messageCaches[messageHash]
+    function release(address recipient, TokenData[] calldata creditBundle) external onlyBroker {
+        // creditBundle.transfer(address(this), recipient)
+        creditBundle.transferOut(recipient);
     }
 
-    function rollback(uint256 messageNonce) external {
-        // TODO: only from broker through messenger
-        // TODO:
+    function conclude(uint256 messageNonce) external onlyBroker {
+        delete messageCaches[messageNonce];
+    }
+
+    function rollback(uint256 messageNonce) external onlyBroker {
         // 1. get sender and debitBundle from messageCaches[messageHash]
+        MessageCache memory messageCache = messageCaches[messageNonce];
         // 2. debitBundle.transfer(address(this), sender)
+        messageCache.debitBundle.transferOut(messageCache.sender);
         // 3. delete messageCaches[messageHash]
+        delete messageCaches[messageNonce];
     }
 }

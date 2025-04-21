@@ -6,4 +6,5 @@ library Errors {
     error NotBroker();
     error NotMessenger();
     error NotSelf();
+    error NotHubChain();
 }
