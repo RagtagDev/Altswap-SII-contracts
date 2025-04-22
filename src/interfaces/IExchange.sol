@@ -8,4 +8,6 @@ interface IExchange is IERC6909Claims {
 
     function debit(address user, uint256 chainId, address token, uint256 amount) external;
     function credit(address user, uint256 chainId, address token, uint256 amount) external;
+
+    function getBalance(address user, uint256 chainId, address token) external view returns (uint256 balance);
 }

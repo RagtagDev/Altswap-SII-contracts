@@ -17,14 +17,17 @@ contract Agent is IAgent {
     }
 
     uint256 public nonce;
-    // TODO: set
     uint256 internal immutable hubChainId;
-    // TODO: set
     IBroker internal immutable broker;
     IL2ToL2CrossDomainMessenger internal immutable messenger =
         IL2ToL2CrossDomainMessenger(Predeploys.L2_TO_L2_CROSS_DOMAIN_MESSENGER);
 
     mapping(uint256 => MessageCache) internal messageCaches;
+
+    constructor(uint256 _hubChainId, address _broker) {
+        hubChainId = _hubChainId;
+        broker = IBroker(_broker);
+    }
 
     function initiate(
         address executor,

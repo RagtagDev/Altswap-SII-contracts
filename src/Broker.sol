@@ -53,7 +53,7 @@ contract Broker is IBroker, IUnlockCallback {
         uint256 recipientChainId,
         address recipient,
         TokenData[] calldata debitBundle,
-        TokenData[] calldata creditBundle
+        TokenData[] memory creditBundle
     ) external {
         require(msg.sender == address(this), Errors.NotSelf());
 
@@ -64,6 +64,10 @@ contract Broker is IBroker, IUnlockCallback {
         exchange.unlock(abi.encode(executor, executionData));
 
         for (uint256 i = 0; i < creditBundle.length; i++) {
+            if (creditBundle[i].amount == 0) {
+                creditBundle[i].amount = exchange.getBalance(user, recipientChainId, creditBundle[i].token);
+            }
+
             exchange.credit(user, recipientChainId, creditBundle[i].token, creditBundle[i].amount);
         }
 

@@ -23,15 +23,19 @@ contract Exchange is IExchange, ERC6909Claims {
         registry = IERC6909Registry(_registry);
     }
 
-    function unlock(bytes calldata data) external returns (bytes memory result) {
+    function unlock(bytes calldata data) external onlyBroker returns (bytes memory result) {
         // TODO:
     }
 
-    function debit(address user, uint256 chainId, address token, uint256 amount) external {
+    function debit(address user, uint256 chainId, address token, uint256 amount) external onlyBroker {
         _mint(user, registry.toID(chainId, token), amount);
     }
 
-    function credit(address user, uint256 chainId, address token, uint256 amount) external {
+    function credit(address user, uint256 chainId, address token, uint256 amount) external onlyBroker {
         _burn(user, registry.toID(chainId, token), amount);
+    }
+
+    function getBalance(address user, uint256 chainId, address token) external view returns (uint256 balance) {
+        return balanceOf[user][registry.toID(chainId, token)];
     }
 }
