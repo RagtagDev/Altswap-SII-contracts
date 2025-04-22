@@ -28,7 +28,7 @@ contract ERC6909RegistryTest is Test {
     function test_fuzz_setSubnodeToken(uint256 id, uint256 chainId, address token) public {
         vm.expectEmit(true, true, true, false, address(registry));
         emit Registered(id, chainId, token);
-        
+
         registry.setSubnodeToken(id, chainId, token, false);
 
         assertEq(registry.toToken(registry.toID(chainId, token), chainId), token);

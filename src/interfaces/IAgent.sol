@@ -11,11 +11,11 @@ interface IAgent {
         address recipient,
         TokenData[] calldata debitBundle,
         TokenData[] calldata creditBundle
-    ) external returns (bytes32 messageHash);
+    ) external payable returns (uint256 nonce);
 
     function release(address recipient, TokenData[] calldata creditBundle) external;
 
-    function conclude(bytes32 messageHash) external;
+    function conclude(uint256 messageNonce) external;
 
-    function rollback(bytes32 messageHash) external;
+    function rollback(uint256 messageNonce) external;
 }
