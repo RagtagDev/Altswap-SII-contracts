@@ -12,4 +12,9 @@ remappings = [
 [dependencies]
 forge-std = "1.9.6"
 
+[rpc_endpoints]
+SpokeChain = "http://127.0.0.1:9545/"
+HubChain = "http://127.0.0.1:9546/"
+
+
 # See more config options https://github.com/foundry-rs/foundry/blob/master/crates/config/README.md#all-options

@@ -1,5 +1,7 @@
 dependencies/
 cache/
 out/
+broadcast/
 
 remappings.txt
+.env
