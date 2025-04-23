@@ -13,7 +13,7 @@ contract SuccessSwapScript is Script {
     Agent agent = Agent(address(0x8464135c8F25Da09e49BC8782676a84730C318bC));
 
     address user = vm.envAddress("USER_ADDRESS");
-    address recipient = address(0x23618e81E3f5cdF7f54C3d65f7FBc0aBf5B21E8f);
+    address recipient = user;
 
     function run() public {
         vm.createSelectFork("SpokeChain");

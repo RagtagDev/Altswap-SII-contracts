@@ -25,7 +25,6 @@ contract DeployTokenScript is Script {
         tokenBSpoke = new TestERC20(0);
 
         tokenASpoke.mint(user, 100 ether);
-        tokenBSpoke.mint(user, 100 ether);
         vm.stopBroadcast();
 
         vm.createSelectFork("HubChain");

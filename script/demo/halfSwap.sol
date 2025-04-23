@@ -19,14 +19,14 @@ contract SuccessSwapScript is Script {
         vm.createSelectFork("SpokeChain");
         console.log("Before swap: ");
         console.log("tokenA balance: ", tokenASpoke.balanceOf(user));
-        console.log("tokenB balance: ", tokenBSpoke.balanceOf(user));
+        // console.log("tokenB balance: ", tokenBSpoke.balanceOf(user));
 
         vm.startBroadcast(vm.envUint("USER_PRIVATE_KEY"));
         tokenASpoke.approve(address(agent), 1000 ether);
         tokenBSpoke.mint(address(agent), 1000 ether);
 
         bytes memory executionData = abi.encode(
-            1,
+            2,
             user,
             address(tokenASpoke),
             address(tokenBSpoke),
@@ -36,8 +36,9 @@ contract SuccessSwapScript is Script {
         TokenData[] memory debitBundle = new TokenData[](1);
         debitBundle[0] = TokenData({token: address(tokenASpoke), amount: 0.1 ether});
 
-        TokenData[] memory creditBundle = new TokenData[](1);
-        creditBundle[0] = TokenData({token: address(tokenBSpoke), amount: 0});
+        TokenData[] memory creditBundle = new TokenData[](2);
+        creditBundle[0] = TokenData({token: address(tokenASpoke), amount: 0});
+        creditBundle[1] = TokenData({token: address(tokenBSpoke), amount: 0});
 
         agent.initiate(address(0), executionData, 901, recipient, debitBundle, creditBundle);
     }
