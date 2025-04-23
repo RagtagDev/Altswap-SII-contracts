@@ -1,1 +1,12 @@
 # Altswap
+
+== Return ==
+tokenASpoke: contract TestERC20 0x5FbDB2315678afecb367f032d93F642f64180aa3
+tokenBSpoke: contract TestERC20 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+tokenAHub: contract TestERC20 0x5FbDB2315678afecb367f032d93F642f64180aa3
+tokenBHub: contract TestERC20 0xe7f1725E7734CE288F8367e1Bb143E90bb3F0512
+registry: contract ERC6909Registry 0x9fE46736679d2D9a65F0992F2272dE9f3c7fa6e0
+
+agent: contract Agent 0x8464135c8F25Da09e49BC8782676a84730C318bC
+broker: contract Broker 0x663F3ad617193148711d28f5334eE4Ed07016602
+exchange: contract Exchange 0x700b6A60ce7EaaEA56F065753d8dcB9653dbAD35
